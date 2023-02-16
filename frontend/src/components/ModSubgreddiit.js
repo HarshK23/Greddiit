@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { CurrentUserContext } from "../App"
 import Users from './modTools/users'
 import JoinRequests from "./modTools/joinRequests"
+import Reports from "./modTools/reports"
 import subgreddiitService from '../services/subgreddiits'
 
 const ModSubgreddiit = () => {
@@ -54,6 +55,10 @@ const ModSubgreddiit = () => {
             ? <Users currentSubgreddiitObj={currentSubgreddiitObj} />
             : window.location.pathname.split('/')[5] === 'joinRequests'
             ? <JoinRequests currentSubgreddiitObj={currentSubgreddiitObj} setCurrentSubgreddiitObj={setCurrentSubgreddiitObj} />
+            : window.location.pathname.split('/')[5] === 'stats'
+            ? null 
+            : window.location.pathname.split('/')[5] === 'reports'
+            ? currentSubgreddiitObj && <Reports currentSubgreddiitObj={currentSubgreddiitObj} />
             : null
           }
         </Box>

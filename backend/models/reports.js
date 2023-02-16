@@ -14,10 +14,14 @@ mongoose.connect(mongoUrl)
   })
 
 const reportSchema = new mongoose.Schema({
+  createdAt: {type: Date, default: Date.now, expires: 864000},
   reportedBy: {type: String, required: true},
   reportedUser: {type: String, required: true},
   concern: {type: String, required: true},
   associatedPost: {type: String, required: true},
+  postText: {type: String, required: true},
+  postedIn: {type: String, required: true},
+  verdict: {type: String, required: true},
 })
 
 reportSchema.set('toJSON', {

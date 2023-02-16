@@ -52,7 +52,7 @@ const NavBar = ({ theme }) => {
           {window.location.pathname !== '/'
             ?
             <>
-              <Button onClick={() => console.log(currentUser)}>current user</Button>
+              {/* <Button onClick={() => console.log(currentUser)}>current user</Button> */}
               <Button sx={{ marginRight: 'auto', marginLeft: 'auto' }} startIcon={<AccountBoxIcon />} onClick={() => navigateTo('profile')} color='inherit'>Profile</Button>
               <Button sx={{ marginRight: 'auto', marginLeft: 'auto' }} startIcon={<FeedIcon />} onClick={() => navigateTo('mysubgreddiits')} color='inherit'>My Subgreddiits</Button>
             </>

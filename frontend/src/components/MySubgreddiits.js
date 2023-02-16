@@ -1,8 +1,9 @@
 import { Button, Card, CardMedia, Grid, Input, List, Slide, TextField, Typography } from "@mui/material"
 import { Box } from "@mui/system"
-import { useContext, useEffect, useState } from "react"
+import { Suspense, useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { CurrentUserContext } from "../App"
+import genericBg from './genericbg.jpg'
 
 import subgreddiitService from '../services/subgreddiits'
 
@@ -92,25 +93,6 @@ const MySubgreddiits = () => {
     hmm()
   }
 
-  const imageDecoder = (string) => {
-    const getBase64 = async () => {
-      await new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.readAsDataURL(string)
-        reader.onload = () => {
-          return reader.result
-        }
-      })
-    }
-
-    const hmm = async () => {
-      const image = await getBase64()
-      return image
-    }
-
-    return hmm()
-  }
-
   const handleDeleteSubgreddit = async (event, name) => {
     subgreddiitService.deleteSubgreddiit(name)
       .then(
@@ -122,49 +104,64 @@ const MySubgreddiits = () => {
     navigate(`gr/${name}`)
   }
 
-  const paddingStyle = '1rem'
+  const genericBgStyle = {
+    height: 0,
+    paddingTop: '26.25%',
+    marginBottom: '10px',
+    borderRadius: '5px',
+    backgroundImage: `url(${genericBg})`,
+    opacity: '0.5'
+  }
 
   return (
     <div style={{ display: 'flex', align: 'center' }}>
-      {/* <Button onClick={() => console.log(newSubgreddiit)}>Print image</Button> */}
+      
       <Grid height='100%' overflow='auto' sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Box marginTop='auto' marginLeft='auto' width='650px'>
+        <Suspense fallback={<Typography variant="h1">Loading...</Typography>}>
           {subgreddiits.map(sub => {
             if (sub.createdBy === currentUser) {
+              if (!sub) {
+                return <h1>loading</h1>
+              }
               return (
-                <Card key={sub.name} sx={{ margin: '10px', padding: '10px', borderRadius: '15px', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))' }}>
-                  {/* <CardMedia
-                  height='140px'
-                  image={imageDecoder(sub.image)*}
-                  title="Contemplative Reptile"
-                /> */}
-                  <Grid container>
-                    <Typography component='h1' variant="h5">
-                      r/{sub.name}
-                    </Typography>
-                    <Grid marginLeft='auto' display='flex' justifyContent='end'>
-                      <Button variant="contained" onClick={() => openSelectedSub(sub.name)}>Open</Button>
-                      <Button sx={{ marginLeft: '10px' }} color='error' variant="outlined" onClick={(event) => handleDeleteSubgreddit(event, sub.name)}>Delete</Button>
+                <div key={sub.name}>
+                  <Card key={sub.name} sx={{ margin: '10px', padding: '10px', borderRadius: '15px', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))' }}>
+                    <CardMedia
+                      style={{ height: 0, paddingTop: '26.25%', marginBottom: '10px', borderRadius: '5px' }}
+                      image={sub.image || genericBg}
+                      opacity={0.05}
+                      title="Subgreddiit"
+                    />
+                    <Grid container>
+                      <Typography component='h1' variant="h5">
+                        r/{sub.name}
+                      </Typography>
+                      <Grid marginLeft='auto' display='flex' justifyContent='end'>
+                        <Button variant="contained" onClick={() => openSelectedSub(sub.name)}>Open</Button>
+                        <Button sx={{ marginLeft: '10px' }} color='error' variant="outlined" onClick={(event) => handleDeleteSubgreddit(event, sub.name)}>Delete</Button>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <br />
-                  <Typography marginBottom='5px' component='h1' variant="body1">
-                    {sub.description}
-                  </Typography>
-                  <Typography marginBottom='5px' component='h1' variant="body1">
-                    <strong>No. of followers:</strong> {sub.followers.length}
-                  </Typography>
-                  <Typography marginBottom='5px' component='h1' variant="body1">
-                    <strong>No. of posts:</strong> {sub.posts.length}
-                  </Typography>
-                  <Typography marginBottom='5px' component='h1' variant="body1">
-                    <strong>Banned Keywords:</strong> {sub.bannedKeywords[0] === '' ? <em>-None-</em> : sub.bannedKeywords.join(', ')}
-                  </Typography>
-                </Card>
+                    <br />
+                    <Typography marginBottom='5px' component='h1' variant="body1">
+                      {sub.description}
+                    </Typography>
+                    <Typography marginBottom='5px' component='h1' variant="body1">
+                      <strong>No. of followers:</strong> {sub.followers.length}
+                    </Typography>
+                    <Typography marginBottom='5px' component='h1' variant="body1">
+                      <strong>No. of posts:</strong> {sub.posts.length}
+                    </Typography>
+                    <Typography marginBottom='5px' component='h1' variant="body1">
+                      <strong>Banned Keywords:</strong> {sub.bannedKeywords[0] === '' ? <em>-None-</em> : sub.bannedKeywords.join(', ')}
+                    </Typography>
+                  </Card>
+                </div>
               )
             }
           })
-          }
+        }
+        </Suspense>
         </Box>
       </Grid>
       <Grid marginLeft='auto' marginTop='10px' marginRight='25px'>
