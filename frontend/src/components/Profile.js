@@ -134,7 +134,7 @@ const Profile = ({ users, setUsers, signInStatus }) => {
                   <div key={`${objKey}`}>
                     <Typography component='h1' variant="body1">
                       <TextField variant="outlined"
-                        margin="normal" autoFocus={objKey === 'firstName'} required fullWidth id={objKey} label={parameters[objKey]} name={objKey} autoComplete={objKey}  onChange={event => handleParamChange(event, objKey)} />
+                        margin="normal" autoFocus={objKey === 'firstName'} required fullWidth id={objKey} label={parameters[objKey]} name={objKey} autoComplete={objKey} onChange={event => handleParamChange(event, objKey)} />
                     </Typography>
                   </div>
                 )

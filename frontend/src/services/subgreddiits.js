@@ -64,7 +64,7 @@ const handleJoinRequest = async (subName, userEmail, decision) => {
       joinRequests: newJoinRequests,
       image: subgreddiit.image
     }
-    
+
     const response = await axios.put(`${baseUrl}/${subgreddiit.id}`, newObject)
 
     return response.data
@@ -77,6 +77,49 @@ const createSubgreddiit = async (newObject) => {
   const response = await axios.post(baseUrl, newObject)
 
   return response.data
+}
+
+const leaveSubgreddiit = async (subName, userEmail) => {
+  try {
+    const subgreddiit = await getSubgreddiit(subName)
+    const followers = subgreddiit.followers
+    const newFollowers = followers.filter(follower => {
+      return follower !== userEmail
+    })
+
+    const newBlacklisted = subgreddiit.blacklisted.concat(userEmail)
+
+    const newObject = { ...subgreddiit, followers: newFollowers, blacklisted: newBlacklisted }
+
+    const response = await axios.put(`${baseUrl}/${subgreddiit.id}`, newObject)
+    return response.data
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const joinSubgreddiit = async (subName, userEmail) => {
+  try {
+    const subgreddiit = await getSubgreddiit(subName)
+    const joinRequests = subgreddiit.joinRequests
+    const newJoinRequests = joinRequests.concat(userEmail)
+    
+    const newObject = { ...subgreddiit, joinRequests: newJoinRequests }
+
+    const response = await axios.put(`${baseUrl}/${subgreddiit.id}`, newObject)
+    return response.data
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const editSubgreddiit = async (id, newObject) => {
+  try {
+    const response = await axios.put(`${baseUrl}/${id}`, newObject)
+    return response.data
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 const deleteSubgreddiit = async (name) => {
@@ -103,4 +146,4 @@ const deleteSubgreddiit = async (name) => {
     })
 }
 
-export default { getAll, getSubgreddiit, handleJoinRequest, createSubgreddiit, deleteSubgreddiit }
+export default { getAll, getSubgreddiit, handleJoinRequest, createSubgreddiit, leaveSubgreddiit, joinSubgreddiit, editSubgreddiit, deleteSubgreddiit }

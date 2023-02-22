@@ -36,12 +36,12 @@ const BlockButton = ({ report }) => {
 
   return (
     <Button
-      disabled={report.verdict === 'ignored' || blocked}
+      disabled={report.verdict === 'ignored' || blocked || report.verdict === 'blocked'}
       variant={isCounting ? 'outlined' : 'contained'}
       color="error"
       onClick={isCounting ? handleCancelBlock : handleBlock}
     >
-      {isCounting ? `Cancel in ${countdown} secs` : blocked ? `Blocked` : `Block User`}
+      {isCounting ? `Cancel in ${countdown} secs` : blocked || report.verdict === 'blocked' ? `Blocked` : `Block User`}
     </Button>
   )
 }
@@ -89,10 +89,14 @@ const Reports = ({ currentSubgreddiitObj }) => {
       <Box display='flex' justifyContent='center'>
         <Typography justifyContent='center' my='8px' variant='h4'>REPORTS</Typography>
       </Box>
+      {reports.length === 0 &&
+        <Box display='flex' justifyContent='center'>
+          <Typography variant='h6'><em>No reports</em></Typography>
+        </Box>}
       {reports && reports.map(report => {
         return (
           <Box key={report.id} display='flex' justifyContent='center'>
-            <Card sx={{ width: '85%', justifyContent: 'center', my: '10px' }}>
+            <Card sx={{ width: '90%', justifyContent: 'center', my: '10px' }}>
               <Grid margin='8px' key={report.id} display='flex' justifyContent='center' sx={{ borderRadius: '5px' }}>
                 <Typography marginTop='3px' variant='h5'><strong>Post: </strong> {report.associatedPost}</Typography>
                 <Grid display='flex' marginLeft='auto'>

@@ -33,7 +33,8 @@ subgreddiitsRouter.post('/', async (request, response, next) => {
     posts: body.posts,
     blockedUsers: body.blockedUsers,
     joinRequests: body.joinRequests,
-    image: body.image
+    image: body.image,
+    blacklisted: body.blacklisted
   })
 
   await subgreddiit.save()
@@ -44,11 +45,11 @@ subgreddiitsRouter.post('/', async (request, response, next) => {
 })
 
 subgreddiitsRouter.put('/:id', (request, response, next) => {
-  const { name, description, tags, bannedKeywords, followers, createdBy, posts, blockedUsers, joinRequests, image } = request.body
+  const { name, description, tags, bannedKeywords, followers, createdBy, posts, blockedUsers, joinRequests, image, blacklisted } = request.body
 
   Subgreddiit.findByIdAndUpdate(
     request.params.id,
-    { name, description, tags, bannedKeywords, followers, createdBy, posts, blockedUsers, joinRequests, image },
+    { name, description, tags, bannedKeywords, followers, createdBy, posts, blockedUsers, joinRequests, image, blacklisted },
     { new: true, runValidators: true, context: 'query' }
   )
     .then(updatedSubgreddiit => {

@@ -59,8 +59,8 @@ const MySubgreddiits = () => {
       newSubgreddiit.bannedKeywords = ""
     }
 
-    newSubgreddiit.tags = newSubgreddiit.tags.split(',')
-    newSubgreddiit.bannedKeywords = newSubgreddiit.bannedKeywords.split(',')
+    newSubgreddiit.tags = newSubgreddiit.tags.split(', ')
+    newSubgreddiit.bannedKeywords = newSubgreddiit.bannedKeywords.split(', ')
 
     newSubgreddiit.followers = [currentUser]
     newSubgreddiit.createdBy = currentUser
@@ -115,53 +115,53 @@ const MySubgreddiits = () => {
 
   return (
     <div style={{ display: 'flex', align: 'center' }}>
-      
+
       <Grid height='100%' overflow='auto' sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Box marginTop='auto' marginLeft='auto' width='650px'>
-        <Suspense fallback={<Typography variant="h1">Loading...</Typography>}>
-          {subgreddiits.map(sub => {
-            if (sub.createdBy === currentUser) {
-              if (!sub) {
-                return <h1>loading</h1>
-              }
-              return (
-                <div key={sub.name}>
-                  <Card key={sub.name} sx={{ margin: '10px', padding: '10px', borderRadius: '15px', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))' }}>
-                    <CardMedia
-                      style={{ height: 0, paddingTop: '26.25%', marginBottom: '10px', borderRadius: '5px' }}
-                      image={sub.image || genericBg}
-                      opacity={0.05}
-                      title="Subgreddiit"
-                    />
-                    <Grid container>
-                      <Typography component='h1' variant="h5">
-                        r/{sub.name}
-                      </Typography>
-                      <Grid marginLeft='auto' display='flex' justifyContent='end'>
-                        <Button variant="contained" onClick={() => openSelectedSub(sub.name)}>Open</Button>
-                        <Button sx={{ marginLeft: '10px' }} color='error' variant="outlined" onClick={(event) => handleDeleteSubgreddit(event, sub.name)}>Delete</Button>
+          <Suspense fallback={<Typography variant="h1">Loading...</Typography>}>
+            {subgreddiits.map(sub => {
+              if (sub.createdBy === currentUser) {
+                if (!sub) {
+                  return <h1>loading</h1>
+                }
+                return (
+                  <div key={sub.name}>
+                    <Card key={sub.name} sx={{ margin: '10px', padding: '10px', borderRadius: '15px', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))' }}>
+                      <CardMedia
+                        style={{ height: 0, paddingTop: '26.25%', marginBottom: '10px', borderRadius: '5px' }}
+                        image={sub.image || genericBg}
+                        opacity={0.05}
+                        title="Subgreddiit"
+                      />
+                      <Grid container>
+                        <Typography component='h1' variant="h5">
+                          r/{sub.name}
+                        </Typography>
+                        <Grid marginLeft='auto' display='flex' justifyContent='end'>
+                          <Button variant="contained" onClick={() => openSelectedSub(sub.name)}>Open</Button>
+                          <Button sx={{ marginLeft: '10px' }} color='error' variant="outlined" onClick={(event) => handleDeleteSubgreddit(event, sub.name)}>Delete</Button>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <br />
-                    <Typography marginBottom='5px' component='h1' variant="body1">
-                      {sub.description}
-                    </Typography>
-                    <Typography marginBottom='5px' component='h1' variant="body1">
-                      <strong>No. of followers:</strong> {sub.followers.length}
-                    </Typography>
-                    <Typography marginBottom='5px' component='h1' variant="body1">
-                      <strong>No. of posts:</strong> {sub.posts.length}
-                    </Typography>
-                    <Typography marginBottom='5px' component='h1' variant="body1">
-                      <strong>Banned Keywords:</strong> {sub.bannedKeywords[0] === '' ? <em>-None-</em> : sub.bannedKeywords.join(', ')}
-                    </Typography>
-                  </Card>
-                </div>
-              )
+                      <br />
+                      <Typography marginBottom='5px' component='h1' variant="body1">
+                        {sub.description}
+                      </Typography>
+                      <Typography marginBottom='5px' component='h1' variant="body1">
+                        <strong>No. of followers:</strong> {sub.followers.length}
+                      </Typography>
+                      <Typography marginBottom='5px' component='h1' variant="body1">
+                        <strong>No. of posts:</strong> {sub.posts.length}
+                      </Typography>
+                      <Typography marginBottom='5px' component='h1' variant="body1">
+                        <strong>Banned Keywords:</strong> {sub.bannedKeywords[0] === '' ? <em>-None-</em> : sub.bannedKeywords.join(', ')}
+                      </Typography>
+                    </Card>
+                  </div>
+                )
+              }
+            })
             }
-          })
-        }
-        </Suspense>
+          </Suspense>
         </Box>
       </Grid>
       <Grid marginLeft='auto' marginTop='10px' marginRight='25px'>

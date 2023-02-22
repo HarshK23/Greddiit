@@ -13,7 +13,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.static('build'))
-app.use(express.json({limit: '50mb'}));
+app.use(express.json({ limit: '50mb' }));
 
 app.use('/api/users', usersRouter)
 app.use('/api/subgreddiits', subgreddiitsRouter)
@@ -29,7 +29,6 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name == 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
-{}
   next(error)
 }
 

@@ -24,7 +24,8 @@ const subgreddiitSchema = new mongoose.Schema({
   posts: { type: [String], required: false},
   blockedUsers: { type: [String], required: false },
   joinRequests: { type: [String], required: false },
-  image: { type: String, required: false }
+  image: { type: String, required: false },
+  blacklisted: { type: [String], required: false }
 })
 
 subgreddiitSchema.plugin(uniqueValidator)

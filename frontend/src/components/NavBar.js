@@ -8,6 +8,8 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import FeedIcon from '@mui/icons-material/Feed';
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
 
 import { ThemeContext } from '../App.js'
 import { CurrentUserContext } from '../App.js'
@@ -55,6 +57,8 @@ const NavBar = ({ theme }) => {
               {/* <Button onClick={() => console.log(currentUser)}>current user</Button> */}
               <Button sx={{ marginRight: 'auto', marginLeft: 'auto' }} startIcon={<AccountBoxIcon />} onClick={() => navigateTo('profile')} color='inherit'>Profile</Button>
               <Button sx={{ marginRight: 'auto', marginLeft: 'auto' }} startIcon={<FeedIcon />} onClick={() => navigateTo('mysubgreddiits')} color='inherit'>My Subgreddiits</Button>
+              <Button sx={{ marginRight: 'auto', marginLeft: 'auto' }} startIcon={<DynamicFeedIcon />} onClick={() => navigateTo('allsubgreddiits')} color='inherit'>All Subgreddiits</Button>
+              <Button sx={{ marginRight: 'auto', marginLeft: 'auto' }} startIcon={<BookmarksIcon />} onClick={() => navigateTo('savedposts')} color='inherit'>Saved Posts</Button>
             </>
             : null}
           {window.location.pathname !== '/'

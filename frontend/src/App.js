@@ -10,9 +10,11 @@ import { createTheme } from '@mui/material'
 import profileService from './services/users'
 import Dashboard from './components/Dashboard'
 import MySubgreddiits from './components/MySubgreddiits'
+import AllSubgreddiits from './components/AllSubgreddiits'
 
 import './app.css'
 import ModSubgreddiit from './components/ModSubgreddiit'
+import SubgreddiitInfo from './components/SubgreddiitInfo'
 
 export const ThemeContext = createContext({ toggleThemeMode: () => { } })
 export const CurrentUserContext = createContext()
@@ -89,6 +91,8 @@ const App = () => {
               <Route path='/:userEmail/mysubgreddiits' element={<MySubgreddiits />} />
               <Route path='/:userEmail/mysubgreddiits/gr/:subName' element={<ModSubgreddiit />} />
               <Route path='/:userEmail/mysubgreddiits/gr/:subName/:tool' element={<ModSubgreddiit />} />
+              <Route path='/:userEmail/allsubgreddiits' element={<AllSubgreddiits />} />
+              <Route path='/:userEmail/allsubgreddiits/gr/:subName' element={<SubgreddiitInfo />} />
             </Routes>
           </ThemeProvider>
         </ThemeContext.Provider>

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import postsService from './posts'
+import subgreddiitService from './subgreddiits'
 const baseUrl = 'http://localhost:3001/api/reports'
 
 const getAll = async () => {
@@ -33,9 +34,16 @@ const changeVerdict = async (id, givenVerdict) => {
       try {
         const newPost = await postsService.getPost(report.associatedPost)
         console.log(newPost)
+        const dupPost = { ...newPost }
         newPost.postedBy = 'Blocked User'
   
         await postsService.editPost(report.associatedPost, newPost)
+
+        const subgreddiit = await subgreddiitService.getSubgreddiit(newPost.postedIn)
+
+        const newSub = { ...subgreddiit, followers: subgreddiit.followers.filter(follower => follower !== dupPost.postedBy), blockedUsers: subgreddiit.blockedUsers.concat(dupPost.postedBy) }
+
+        await subgreddiitService.editSubgreddiit(subgreddiit.id, newSub)
       } catch (error) {
         console.log(error)
       }
