@@ -4,6 +4,9 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 
 import { CurrentUserContext } from "../App"
+import { GoogleLogin } from "@react-oauth/google"
+
+import jwt_decode from "jwt-decode"
 
 import userService from '../services/users'
 import postsService from '../services/posts'
@@ -75,6 +78,7 @@ const SignIn = ({ users, setUsers, setSignInStatus }) => {
     const anotherDetails = enteredSignUpDetails
     anotherDetails.followers = []
     anotherDetails.following = []
+    anotherDetails.savedPosts = []
 
     await userService.createUser(anotherDetails)
       .then(returnedUser => {
@@ -112,9 +116,24 @@ const SignIn = ({ users, setUsers, setSignInStatus }) => {
     setEnteredSignUpDetails(duplicateSignUpDetails)
   }
 
-  const nugga = () => {
-    // postsService.deletePostsBySubgreddiit('funny')
-    console.log(subgreddiitsService.deleteSubgreddiit('nigger'))
+  const handleGoogleSuccess = async (res) => {
+    const result = jwt_decode(res?.credential)
+    console.log(result)
+    const token = res?.credential
+
+    try {
+      setCurrentUser(result.email)
+      setEnteredSignInDetails(['', ''])
+      localStorage.setItem('currentUser', result.email)
+      localStorage.setItem('signInStatus', 'true')
+      navigate(`/${result.email}`)
+    } catch (exception) {
+      alert('Wrong credentials')
+    }
+  }
+
+  const handleGoogleError = (error) => {
+    console.log(error)
   }
 
   return (
@@ -131,8 +150,15 @@ const SignIn = ({ users, setUsers, setSignInStatus }) => {
               Password: <TextField type='password' fullWidth onChange={event => handleEnteredSignInDetails(event, 1)} />
               <br /><br />
               <Grid container>
-                <Grid item sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Button disabled={enteredSignInDetails[0] === '' || enteredSignInDetails[1] === ''} xs={6} variant="contained" onClick={handleLogin}>Sign in</Button>
+                <Grid item sx={{ display: 'flex', flexDirection: 'row' }}>
+                  <Button sx={{width: '50%'}} disabled={enteredSignInDetails[0] === '' || enteredSignInDetails[1] === ''} xs={6} variant="contained" onClick={handleLogin}>Sign in</Button>
+                  <GoogleLogin
+                    render={renderProps => (
+                      <Button onClick={renderProps.onClick} disabled={renderProps.disabled} variant="contained" sx={{ marginTop: '10px' }}>Sign in with Google</Button>
+                    )}
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
+                  />
                 </Grid>
                 <Grid item marginLeft='auto'>
                   <Button variant="text" onClick={handleSignInToggle}>Sign up for a new account</Button>
@@ -148,7 +174,7 @@ const SignIn = ({ users, setUsers, setSignInStatus }) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end', marginTop: '50px', marginRight: '200px' }}>
             <Box sx={{ border: 'solid', borderRadius: '25px', padding: '1rem', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))' }} marginTop={5} width='400px'>
               {keys.map((objKey) => {
-                if (objKey === 'following' || objKey === 'followers') {
+                if (objKey === 'following' || objKey === 'followers' || objKey === 'savedPosts') {
                   return null
                 }
                 return (

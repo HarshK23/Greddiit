@@ -8,6 +8,7 @@ import Users from './modTools/users'
 import JoinRequests from "./modTools/joinRequests"
 import Reports from "./modTools/reports"
 import subgreddiitService from '../services/subgreddiits'
+import Stats from "./modTools/stats"
 
 const ModSubgreddiit = () => {
   const [currentSubgreddiit, setCurrentSubgreddiit] = useState(window.location.pathname.split('/')[4])
@@ -56,7 +57,7 @@ const ModSubgreddiit = () => {
             : window.location.pathname.split('/')[5] === 'joinRequests'
             ? <JoinRequests currentSubgreddiitObj={currentSubgreddiitObj} setCurrentSubgreddiitObj={setCurrentSubgreddiitObj} />
             : window.location.pathname.split('/')[5] === 'stats'
-            ? null 
+            ? currentSubgreddiitObj && <Stats currentSubgreddiitObj={currentSubgreddiitObj} />
             : window.location.pathname.split('/')[5] === 'reports'
             ? currentSubgreddiitObj && <Reports currentSubgreddiitObj={currentSubgreddiitObj} />
             : null

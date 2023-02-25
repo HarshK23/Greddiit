@@ -18,14 +18,23 @@ const subgreddiitSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   description: { type: String, required: true },
   tags: { type: [String], required: false },
-  bannedKeywords: { type: [String], required: false },
+  bannedKeywords: { type: [String], required: true },
   followers: { type: [String], required: true },
   createdBy: { type: String, required: true },
   posts: { type: [String], required: false},
   blockedUsers: { type: [String], required: false },
   joinRequests: { type: [String], required: false },
   image: { type: String, required: false },
-  blacklisted: { type: [String], required: false }
+  blacklisted: { type: [String], required: false },
+  creationDate: { type: Date, required: true },
+  stats: [{
+    date: { type: String, required: false },
+    posts: { type: Number, required: false },
+    visitors: { type: Number, required: false },
+    members: { type: Number, required: false },
+    reports: { type: Number, required: false },
+    deletedPosts: { type: Number, required: false }
+  }]
 })
 
 subgreddiitSchema.plugin(uniqueValidator)

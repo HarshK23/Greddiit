@@ -13,12 +13,25 @@ const getAll = async () => {
 const getPost = async (name) => {
   try {
     const posts = await getAll()
-    const concernedPost = posts.filter(post => {
+    const concernedPost = posts.find(post => {
       return post.title === name
     })
 
-    const request = await axios.get(`${baseUrl}/${concernedPost[0].id}`)
+    const request = await axios.get(`${baseUrl}/${concernedPost.id}`)
     return request.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const getSavedPosts = async (userObj) => {
+  try {
+    const posts = await getAll()
+    const savedPosts = posts.filter(post => {
+      return userObj.savedPosts.includes(post.title)
+    })
+
+    return savedPosts
   } catch (error) {
     console.log(error)
   }
@@ -76,4 +89,4 @@ const deletePost = async (id) => {
   return (await axios.delete(`${baseUrl}/${id}`))
 }
 
-export default { getAll, getPost, getPostsBySubgreddiit, createPost, editPost, deletePostsBySubgreddiit, deletePost }
+export default { getAll, getPost, getSavedPosts, getPostsBySubgreddiit, createPost, editPost, deletePostsBySubgreddiit, deletePost }

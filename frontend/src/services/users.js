@@ -27,15 +27,28 @@ const createUser = async (newObject) => {
 
 const editUser = async (email, userObject) => {
   const users = await getAll()
-  console.log(users, email)
 
   const filteredUsers = users.filter(user => user.email === email)
   const id = filteredUsers[0].id
-
-  console.log(id)
 
   const request = await axios.put(`${baseUrl}/${id}`, userObject)
   return request.data
 }
 
-export default { getAll, getUser, createUser, editUser }
+const manageSavedPosts = async (email, postTitle, decision) => {
+  const user = await getUser(email)
+  let newSavedPosts
+
+  if (decision === 'save') {
+    newSavedPosts = user.savedPosts.concat(postTitle)
+  } else {
+    newSavedPosts = user.savedPosts.filter(post => post !== postTitle)
+  }
+
+  const newUser = { ...user, savedPosts: newSavedPosts }
+  const request = await axios.put(`${baseUrl}/${user.id}`, newUser)
+
+  return request.data
+}
+
+export default { getAll, getUser, createUser, editUser, manageSavedPosts }

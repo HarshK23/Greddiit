@@ -119,7 +119,7 @@ const Profile = ({ users, setUsers, signInStatus }) => {
   return (
     <>
       <div style={{ display: 'flex', align: 'center' }}>
-        <Grid padding='1rem' paddingBottom='0.1rem' border='solid' item marginTop={5} marginBottom={2} marginLeft={2} xs={10} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '400px', borderRadius: '25px' , padding: '1rem', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))' }}>
+        <Grid padding='1rem' paddingBottom='0.1rem' border='solid' item marginTop={5} marginBottom={2} marginLeft={2} xs={10} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '400px', borderRadius: '25px', padding: '1rem', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))' }}>
           <Typography component='h1' variant="h4">{user.userName}</Typography>
           <User user={user} />
           <Button sx={{ maxWidth: '402px', marginTop: '10px' }} variant="contained" onClick={toggleToEdit}>Edit Profile</Button>
@@ -146,30 +146,32 @@ const Profile = ({ users, setUsers, signInStatus }) => {
             </Box>
           </Slide>
         </Grid>
-        <Grid position='static' marginLeft={10} marginTop={5}>
-          <Button variant="text" onClick={handleFollowers}>
-            <Typography variant="h5">{user.followers.length === 1 ? <>{user.followers.length} Follower</> : <>{user.followers.length} Followers</>}</Typography>
-          </Button>
-          <Box ref={containerRef}>
-            <Slide sx={{borderRadius: '15px' , padding: '0.1rem', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))'}} container={containerRef.current} direction="down" in={toShowFollowers} mountOnEnter unmountOnExit>
-              <Box>
-                <Followers setUsers={setUsers} users={users} user={user} index={index} />
-              </Box>
-            </Slide>
+        <Box display='flex' justifyContent='center'>
+          <Box display='flex' flexDirection='column' width='300px' position='static' marginLeft={10} marginTop={5}>
+            <Button width='auto' variant="text" onClick={handleFollowers}>
+              <Typography variant="h5">{user.followers.length === 1 ? <>{user.followers.length} Follower</> : <>{user.followers.length} Followers</>}</Typography>
+            </Button>
+            <Box ref={containerRef}>
+              <Slide sx={{ borderRadius: '15px', padding: '0.1rem', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))' }} container={containerRef.current} direction="down" in={toShowFollowers} mountOnEnter unmountOnExit>
+                <Box>
+                  <Followers setUsers={setUsers} users={users} user={user} index={index} />
+                </Box>
+              </Slide>
+            </Box>
           </Box>
-        </Grid>
-        <Grid position='static' marginLeft={10} marginTop={5}>
-          <Button variant="text" onClick={handleFollowing}>
-            <Typography variant="h5">{user.following.length} Following</Typography>
-          </Button>
-          <Box ref={containerRef}>
-            <Slide sx={{borderRadius: '15px' , padding: '0.1rem', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))'}} container={containerRef.current} direction="down" in={toShowFollowing} mountOnEnter unmountOnExit>
-              <Box>
-                <Following setUsers={setUsers} users={users} user={user} index={index} />
-              </Box>
-            </Slide>
+          <Box display='flex' flexDirection='column' width='300px' position='static' marginLeft={10} marginTop={5}>
+            <Button variant="text" onClick={handleFollowing}>
+              <Typography variant="h5">{user.following.length} Following</Typography>
+            </Button>
+            <Box ref={containerRef}>
+              <Slide sx={{ borderRadius: '15px', padding: '0.1rem', backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0.2))' }} container={containerRef.current} direction="down" in={toShowFollowing} mountOnEnter unmountOnExit>
+                <Box>
+                  <Following setUsers={setUsers} users={users} user={user} index={index} />
+                </Box>
+              </Slide>
+            </Box>
           </Box>
-        </Grid>
+        </Box>
       </div>
     </>
   )

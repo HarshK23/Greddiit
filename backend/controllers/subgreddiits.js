@@ -8,6 +8,39 @@ subgreddiitsRouter.get('/', async (request, response) => {
   })
 })
 
+subgreddiitsRouter.get('/visitor/:id', async (request, response, next) => {
+  let currentDate = new Date()
+  currentDate = currentDate.getDate() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear()
+
+  const sub = await Subgreddiit.findById(request.params.id)
+
+  const subStats = sub.stats
+  let flag = false
+
+  for (let i = 0; i < subStats.length; i++) {
+    if (subStats[i].date.localeCompare(currentDate) === 0) {
+      const id = subStats[i]._id.toString()
+
+      await Subgreddiit.updateOne({ "stats": { "$elemMatch": { "date": currentDate } } }, { $inc: { "stats.$.visitors": 1 } });
+      flag = true
+    }
+  }
+
+  if (!flag) {
+    let newObj = {
+      date: currentDate,
+      posts: 0,
+      visitors: 1,
+      members: sub.followers.length,
+      reports: 0,
+      deletedPosts: 0
+    }
+
+    await Subgreddiit.findByIdAndUpdate(sub.id,
+      { "$push": { stats: newObj } })
+  }
+})
+
 subgreddiitsRouter.get('/:id', async (request, response, next) => {
   await Subgreddiit.findById(request.params.id)
     .then(subgreddiit => {
@@ -34,7 +67,9 @@ subgreddiitsRouter.post('/', async (request, response, next) => {
     blockedUsers: body.blockedUsers,
     joinRequests: body.joinRequests,
     image: body.image,
-    blacklisted: body.blacklisted
+    blacklisted: body.blacklisted,
+    creationDate: new Date(),
+    stats: []
   })
 
   await subgreddiit.save()
@@ -44,12 +79,43 @@ subgreddiitsRouter.post('/', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-subgreddiitsRouter.put('/:id', (request, response, next) => {
-  const { name, description, tags, bannedKeywords, followers, createdBy, posts, blockedUsers, joinRequests, image, blacklisted } = request.body
+subgreddiitsRouter.put('/:id', async (request, response, next) => {
+  const { name, description, tags, bannedKeywords, followers, createdBy, posts, blockedUsers, joinRequests, image, blacklisted, creationDate, stats } = request.body
+
+  let currentDate = new Date()
+  currentDate = currentDate.getDate() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear()
+
+  const sub = await Subgreddiit.findOne({ name: name })
+
+  const subStats = sub.stats
+  let flag = false
+
+  for (let i = 0; i < subStats.length; i++) {
+    if (subStats[i].date.localeCompare(currentDate) === 0) {
+      const id = subStats[i]._id.toString()
+
+      await Subgreddiit.updateOne({ "stats": { "$elemMatch": { "date": currentDate } } }, { $inc: { "stats.$.members": 1 } });
+      flag = true
+    }
+  }
+
+  if (!flag) {
+    let newObj = {
+      date: currentDate,
+      posts: 1,
+      visitors: 1,
+      members: sub.followers.length,
+      reports: 0,
+      deletedPosts: 0
+    }
+
+    await Subgreddiit.findByIdAndUpdate(sub.id,
+      { "$push": { stats: newObj } })
+  }
 
   Subgreddiit.findByIdAndUpdate(
     request.params.id,
-    { name, description, tags, bannedKeywords, followers, createdBy, posts, blockedUsers, joinRequests, image, blacklisted },
+    { name, description, tags, bannedKeywords, followers, createdBy, posts, blockedUsers, joinRequests, image, blacklisted, creationDate, stats },
     { new: true, runValidators: true, context: 'query' }
   )
     .then(updatedSubgreddiit => {

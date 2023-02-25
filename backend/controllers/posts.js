@@ -1,6 +1,8 @@
 const postsRouter = require('express').Router()
 
 const Post = require('../models/posts')
+// const subgreddiitServ = require('./subgreddiit')
+const Subgreddiit = require('../models/subgreddiits')
 
 postsRouter.get('/', async (request, response) => {
   await Post.find({}).then(posts => {
@@ -29,8 +31,39 @@ postsRouter.post('/', async (request, response, next) => {
     postedBy: body.postedBy,
     postedIn: body.postedIn,
     upvotes: body.upvotes,
-    downvotes: body.downvotes
+    downvotes: body.downvotes,
   })
+
+  let currentDate = new Date()
+  currentDate = currentDate.getDate() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear()
+
+  const sub = await Subgreddiit.findOne({ name: post.postedIn })
+
+  const subStats = sub.stats
+  let flag = false
+
+  for (let i = 0; i < subStats.length; i++) {
+    if (subStats[i].date.localeCompare(currentDate) === 0) {
+      const id = subStats[i]._id.toString()
+
+      await Subgreddiit.updateOne({ "stats": { "$elemMatch": { "date": currentDate } } }, { $inc: { "stats.$.posts": 1 } });
+      flag = true
+    }
+  }
+
+  if (!flag) {
+    let newObj = {
+      date: currentDate,
+      posts: 1,
+      visitors: 1,
+      members: sub.followers.length,
+      reports: 0,
+      deletedPosts: 0
+    }
+
+    await Subgreddiit.findByIdAndUpdate(sub.id,
+      { "$push": { stats: newObj } })
+  }
 
   await post.save()
     .then(savedPost => {
@@ -53,7 +86,40 @@ postsRouter.put('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-postsRouter.delete('/:id', (request, response, next) => {
+postsRouter.delete('/:id', async (request, response, next) => {
+  let currentDate = new Date()
+  currentDate = currentDate.getDate() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear()
+
+  const post = await Post.findById(request.params.id)
+
+  const sub = await Subgreddiit.findOne({ name: post.postedIn })
+
+  const subStats = sub.stats
+  let flag = false
+
+  for (let i = 0; i < subStats.length; i++) {
+    if (subStats[i].date.localeCompare(currentDate) === 0) {
+      const id = subStats[i]._id.toString()
+
+      await Subgreddiit.updateOne({ "stats": { "$elemMatch": { "date": currentDate } } }, { $inc: { "stats.$.deletedPosts": 1 } });
+      flag = true
+    }
+  }
+
+  if (!flag) {
+    let newObj = {
+      date: currentDate,
+      posts: 0,
+      visitors: 1,
+      members: sub.followers.length,
+      reports: 0,
+      deletedPosts: 0
+    }
+
+    await Subgreddiit.findByIdAndUpdate(sub.id,
+      { "$push": { stats: newObj } })
+  }
+
   Post.findByIdAndRemove(request.params.id)
     .then(() => {
       response.status(204).end()

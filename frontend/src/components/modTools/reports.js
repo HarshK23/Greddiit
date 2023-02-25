@@ -71,7 +71,7 @@ const Reports = ({ currentSubgreddiitObj }) => {
 
   const deleteReport = async (id) => {
     try {
-      console.log(id)
+      await reportService.changeVerdict(id, "delete")
       await reportService.deleteReport(id)
       setReports(reports.filter(report => report.id !== id))
     } catch (error) {

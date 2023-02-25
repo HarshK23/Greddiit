@@ -2,6 +2,7 @@ const reportsRouter = require('express').Router()
 const nodemailer = require('nodemailer')
 
 const Report = require('../models/reports')
+const Subgreddiit = require('../models/subgreddiits')
 
 reportsRouter.get('/', async (request, response) => {
   await Report.find({}).then(reports => {
@@ -10,8 +11,6 @@ reportsRouter.get('/', async (request, response) => {
 })
 
 reportsRouter.get('/:id', async (request, response, next) => {
-  
-
   await Report.findById(request.params.id)
     .then(report => {
       if (report) {
@@ -36,6 +35,37 @@ reportsRouter.post('/', async (request, response, next) => {
     verdict: body.verdict,
   })
 
+  let currentDate = new Date()
+  currentDate = currentDate.getDate() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear()
+
+  const sub = await Subgreddiit.findOne({ name: report.postedIn })
+
+  const subStats = sub.stats
+  let flag = false
+
+  for (let i = 0; i < subStats.length; i++) {
+    if (subStats[i].date.localeCompare(currentDate) === 0) {
+      const id = subStats[i]._id.toString()
+
+      await Subgreddiit.updateOne({ "stats": { "$elemMatch": { "date": currentDate } } }, { $inc: { "stats.$.reports": 1 } });
+      flag = true
+    }
+  }
+
+  if (!flag) {
+    let newObj = {
+      date: currentDate,
+      posts: 0,
+      visitors: 1,
+      members: sub.followers.length,
+      reports: 1,
+      deletedPosts: 0
+    }
+
+    await Subgreddiit.findByIdAndUpdate(sub.id,
+      { "$push": { stats: newObj } })
+  }
+
   await report.save()
     .then(savedReport => {
       response.status(201).json(savedReport)
@@ -43,33 +73,33 @@ reportsRouter.post('/', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-reportsRouter.post('/:id', async (request, response, next) => {
-  const testAccount = await nodemailer.createTestAccount()
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass
-    }
-  })
+// reportsRouter.post('/:id', async (request, response, next) => {
+//   const testAccount = await nodemailer.createTestAccount()
+//   const transporter = nodemailer.createTransport({
+//     host: 'smtp.ethereal.email',
+//     port: 587,
+//     secure: false,
+//     auth: {
+//       user: testAccount.user,
+//       pass: testAccount.pass
+//     }
+//   })
 
-  Report.findById(request.params.id)
-    .then(report => {
-      const info = transporter.sendMail({
-        from: '"Greddiit" <karwalharshit@gmail.com>',
-        to: `harshitkarwal@hotmail.com`,
-        subject: 'Your report has been reviewed',
-        text: `Your report on ${report.reportedUser} has been reviewed, and the verdict is: ${request.body.givenVerdict}`
-      })
+//   Report.findById(request.params.id)
+//     .then(report => {
+//       const info = transporter.sendMail({
+//         from: '"Greddiit" <karwalharshit@gmail.com>',
+//         to: `harshitkarwal@hotmail.com`,
+//         subject: 'Your report has been reviewed',
+//         text: `Your report on ${report.reportedUser} has been reviewed, and the verdict is: ${request.body.givenVerdict}`
+//       })
 
-      console.log('Message sent: %s', info.messageId)
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info))
+//       console.log('Message sent: %s', info.messageId)
+//       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info))
 
-      response.status(200)
-    })
-})
+//       response.status(200)
+//     })
+// })
 
 reportsRouter.put('/:id', (request, response, next) => {
   const { reportedBy, reportedUser, concern, associatedPost, postText, postedIn, verdict } = request.body

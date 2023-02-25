@@ -11,6 +11,7 @@ import profileService from './services/users'
 import Dashboard from './components/Dashboard'
 import MySubgreddiits from './components/MySubgreddiits'
 import AllSubgreddiits from './components/AllSubgreddiits'
+import SavedPosts from './components/SavedPosts'
 
 import './app.css'
 import ModSubgreddiit from './components/ModSubgreddiit'
@@ -93,6 +94,7 @@ const App = () => {
               <Route path='/:userEmail/mysubgreddiits/gr/:subName/:tool' element={<ModSubgreddiit />} />
               <Route path='/:userEmail/allsubgreddiits' element={<AllSubgreddiits />} />
               <Route path='/:userEmail/allsubgreddiits/gr/:subName' element={<SubgreddiitInfo />} />
+              <Route path='/:userEmail/savedposts' element={<SavedPosts />} />
             </Routes>
           </ThemeProvider>
         </ThemeContext.Provider>

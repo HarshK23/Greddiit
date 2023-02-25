@@ -87,7 +87,6 @@ const MySubgreddiits = () => {
 
     const hmm = async () => {
       await getBase64()
-      console.log(newSubgreddiit.image)
     }
 
     hmm()
@@ -180,7 +179,7 @@ const MySubgreddiits = () => {
                           variant="outlined"
                           margin="normal"
                           fullWidth
-                          required={objKey !== 'tags' && objKey !== 'bannedKeywords'}
+                          required={objKey !== 'tags'}
                           autoFocus={objKey === 'name'}
                           id={objKey}
                           label={parameters[objKey]}

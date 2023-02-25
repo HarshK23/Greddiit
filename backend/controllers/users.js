@@ -37,6 +37,7 @@ usersRouter.post('/', async (request, response, next) => {
     password: passwordHash,
     followers: body.followers,
     following: body.following,
+    savedPosts: body.savedPosts,
   })
 
   await user.save()
@@ -48,14 +49,14 @@ usersRouter.post('/', async (request, response, next) => {
 
 usersRouter.put('/:id', async (request, response, next) => {
   console.log(request.body)
-  const { firstName, lastName, userName, email, age, contact, password, followers, following } = request.body
+  const { firstName, lastName, userName, email, age, contact, password, followers, following, savedPosts } = request.body
 
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
   await User.findByIdAndUpdate(
     request.params.id,
-    { firstName, lastName, userName, email, age, contact, passwordHash, followers, following },
+    { firstName, lastName, userName, email, age, contact, passwordHash, followers, following, savedPosts },
     { new: true, runValidators: true, context: 'query' }
   )
     .then(updatedUser => {

@@ -1,12 +1,14 @@
 import { Button, Card, Grid, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { useEffect, useState } from "react"
+import { LoadingButton } from '@mui/lab'
 
 import userService from '../../services/users'
 import subgreddiitService from '../../services/subgreddiits'
 
 const UserDetails = ({ userEmail, subName, setCurrentSubgreddiitObj }) => {
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     async function getCurrentUser() {
@@ -16,6 +18,8 @@ const UserDetails = ({ userEmail, subName, setCurrentSubgreddiitObj }) => {
   }, [])
 
   const handleRequest = async (action) => {
+    setLoading(true)
+
     const hmm = await subgreddiitService.handleJoinRequest(subName, userEmail, action)
     setCurrentSubgreddiitObj(hmm)
   }
@@ -30,8 +34,8 @@ const UserDetails = ({ userEmail, subName, setCurrentSubgreddiitObj }) => {
             </Grid>
             <Grid display='flex' width='100%' marginLeft='auto'>
               <Box marginLeft='auto'>
-                <Button variant="contained" onClick={() => handleRequest('accept')}>Accept</Button>
-                <Button sx={{ marginLeft: '6px' }} color='error' variant="outlined" onClick={() => handleRequest('reject')}>Reject</Button>
+                <LoadingButton variant="contained" loading={loading} onClick={() => handleRequest('accept')}>Accept</LoadingButton>
+                <LoadingButton sx={{ marginLeft: '6px' }} loading={loading} color='error' variant="outlined" onClick={() => handleRequest('reject')}>Reject</LoadingButton>
               </Box>
             </Grid>
           </Grid>

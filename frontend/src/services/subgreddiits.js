@@ -18,6 +18,7 @@ const getSubgreddiit = async (name) => {
       return subgreddiit.name === name
     })
 
+
     const id = subgreddiit[0].id
 
     try {
@@ -79,6 +80,18 @@ const createSubgreddiit = async (newObject) => {
   return response.data
 }
 
+const getSubgreddiitStats = async (name) => {
+  try {
+    const subgreddiit = await getSubgreddiit(name)
+
+    const stats = subgreddiit.stats
+
+    return stats
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
 const leaveSubgreddiit = async (subName, userEmail) => {
   try {
     const subgreddiit = await getSubgreddiit(subName)
@@ -126,7 +139,6 @@ const deleteSubgreddiit = async (name) => {
   getAll()
     .then(
       response => {
-        console.log(response)
         const subgreddiit = response.filter(subgreddiit => {
           return subgreddiit.name === name
         })
@@ -146,4 +158,4 @@ const deleteSubgreddiit = async (name) => {
     })
 }
 
-export default { getAll, getSubgreddiit, handleJoinRequest, createSubgreddiit, leaveSubgreddiit, joinSubgreddiit, editSubgreddiit, deleteSubgreddiit }
+export default { getAll, getSubgreddiit, handleJoinRequest, createSubgreddiit, getSubgreddiitStats, leaveSubgreddiit, joinSubgreddiit, editSubgreddiit, deleteSubgreddiit }
