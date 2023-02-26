@@ -1,16 +1,17 @@
 const postsRouter = require('express').Router()
 
+const auth = require('../middleware/auth')
 const Post = require('../models/posts')
 // const subgreddiitServ = require('./subgreddiit')
 const Subgreddiit = require('../models/subgreddiits')
 
-postsRouter.get('/', async (request, response) => {
+postsRouter.get('/', auth, async (request, response) => {
   await Post.find({}).then(posts => {
     response.json(posts)
   })
 })
 
-postsRouter.get('/:id', async (request, response, next) => {
+postsRouter.get('/:id', auth, async (request, response, next) => {
   await Post.findById(request.params.id)
     .then(post => {
       if (post) {
@@ -22,7 +23,7 @@ postsRouter.get('/:id', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-postsRouter.post('/', async (request, response, next) => {
+postsRouter.post('/', auth, async (request, response, next) => {
   const body = request.body
 
   const post = new Post({
@@ -72,7 +73,7 @@ postsRouter.post('/', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-postsRouter.put('/:id', (request, response, next) => {
+postsRouter.put('/:id', auth, (request, response, next) => {
   const { title, text, postedBy, postedIn, upvotes, downvotes } = request.body
 
   Post.findByIdAndUpdate(
@@ -86,7 +87,7 @@ postsRouter.put('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-postsRouter.delete('/:id', async (request, response, next) => {
+postsRouter.delete('/:id', auth, async (request, response, next) => {
   let currentDate = new Date()
   currentDate = currentDate.getDate() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear()
 

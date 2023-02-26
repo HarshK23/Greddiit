@@ -1,16 +1,17 @@
 const reportsRouter = require('express').Router()
 const nodemailer = require('nodemailer')
+const auth = require('../middleware/auth')
 
 const Report = require('../models/reports')
 const Subgreddiit = require('../models/subgreddiits')
 
-reportsRouter.get('/', async (request, response) => {
+reportsRouter.get('/', auth, async (request, response) => {
   await Report.find({}).then(reports => {
     response.json(reports)
   })
 })
 
-reportsRouter.get('/:id', async (request, response, next) => {
+reportsRouter.get('/:id', auth, async (request, response, next) => {
   await Report.findById(request.params.id)
     .then(report => {
       if (report) {
@@ -22,7 +23,7 @@ reportsRouter.get('/:id', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-reportsRouter.post('/', async (request, response, next) => {
+reportsRouter.post('/', auth, async (request, response, next) => {
   const body = request.body
 
   const report = new Report({
@@ -101,7 +102,7 @@ reportsRouter.post('/', async (request, response, next) => {
 //     })
 // })
 
-reportsRouter.put('/:id', (request, response, next) => {
+reportsRouter.put('/:id', auth, (request, response, next) => {
   const { reportedBy, reportedUser, concern, associatedPost, postText, postedIn, verdict } = request.body
 
   Report.findByIdAndUpdate(
@@ -115,7 +116,7 @@ reportsRouter.put('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-reportsRouter.delete('/:id', async (request, response, next) => {
+reportsRouter.delete('/:id', auth, async (request, response, next) => {
   Report.findByIdAndRemove(request.params.id)
     .then(() => {
       response.status(204).end()

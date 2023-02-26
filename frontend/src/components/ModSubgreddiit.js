@@ -57,7 +57,7 @@ const ModSubgreddiit = () => {
             : window.location.pathname.split('/')[5] === 'joinRequests'
             ? <JoinRequests currentSubgreddiitObj={currentSubgreddiitObj} setCurrentSubgreddiitObj={setCurrentSubgreddiitObj} />
             : window.location.pathname.split('/')[5] === 'stats'
-            ? currentSubgreddiitObj && <Stats currentSubgreddiitObj={currentSubgreddiitObj} />
+            ? currentSubgreddiitObj && <Stats currentSubgreddiit={currentSubgreddiit} />
             : window.location.pathname.split('/')[5] === 'reports'
             ? currentSubgreddiitObj && <Reports currentSubgreddiitObj={currentSubgreddiitObj} />
             : null

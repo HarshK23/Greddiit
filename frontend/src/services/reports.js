@@ -4,6 +4,17 @@ import subgreddiitService from './subgreddiits'
 import userService from './users'
 const baseUrl = 'http://localhost:3001/api/reports'
 
+// axios.defaults.headers.common['Authenticate'] = 'Bearer ' + localStorage.getItem('userToken')
+
+axios.interceptors.request.use(req => {
+  if (localStorage.getItem('userToken')) {
+    req.headers.authorization = `Bearer ${
+      (localStorage.getItem('userToken'))
+    }`
+  }
+  return req
+})
+
 const getAll = async () => {
   try {
     const request = await axios.get(baseUrl)
@@ -62,9 +73,10 @@ const changeVerdict = async (id, givenVerdict) => {
 
         const user = await userService.getUser(post.postedBy)
         const newUser = { ...user, savedPosts: user.savedPosts.filter(savedPost => savedPost !== post.title) }
-        await userService.editUser(user.email, newUser)
+        userService.editUser(user.email, newUser)
         
         const subgreddiit = await subgreddiitService.getSubgreddiit(post.postedIn)
+        console.log(report)
         
         const newSub = { ...subgreddiit, posts: subgreddiit.posts.filter(post => post !== report.associatedPost) }
         

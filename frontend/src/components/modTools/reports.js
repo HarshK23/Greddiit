@@ -79,9 +79,9 @@ const Reports = ({ currentSubgreddiitObj }) => {
     }
   }
 
-  if (currentSubgreddiitObj === undefined) {
+  if (reports.length === 0) {
     return (
-      <Typography variant="h4">Loading...</Typography>
+      <Typography variant="h4">No Reports</Typography>
     )
   }
   return (
@@ -89,7 +89,11 @@ const Reports = ({ currentSubgreddiitObj }) => {
       <Box display='flex' justifyContent='center'>
         <Typography justifyContent='center' my='8px' variant='h4'>REPORTS</Typography>
       </Box>
-      {reports.length === 0 &&
+      {/* {reports.length === 0 && 
+        <Box display='flex' justifyContent='center'>
+          <Typography variant='h6'><em>Loading...</em></Typography>
+          </Box>} */}
+      {reports && reports.length === 0 &&
         <Box display='flex' justifyContent='center'>
           <Typography variant='h6'><em>No reports</em></Typography>
         </Box>}

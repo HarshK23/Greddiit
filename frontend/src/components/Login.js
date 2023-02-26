@@ -59,7 +59,7 @@ const SignIn = ({ users, setUsers, setSignInStatus }) => {
 
       setCurrentUser(hmm.user.email)
       setEnteredSignInDetails(['', ''])
-      localStorage.setItem('currentUser', hmm.token)
+      localStorage.setItem('userToken', hmm.token)
       localStorage.setItem('signInStatus', 'true')
       navigate(`/${hmm.user.email}`)
     } catch (exception) {

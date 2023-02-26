@@ -4,6 +4,17 @@ import subgreddiitService from '../services/subgreddiits'
 
 const baseUrl = 'http://localhost:3001/api/posts'
 
+// axios.defaults.headers.common['Authenticate'] = 'Bearer ' + localStorage.getItem('userToken')
+
+axios.interceptors.request.use(req => {
+  if (localStorage.getItem('userToken')) {
+    req.headers.authorization = `Bearer ${
+      (localStorage.getItem('userToken'))
+    }`
+  }
+  return req
+})
+
 const getAll = async () => {
   const request = await axios.get(baseUrl)
 

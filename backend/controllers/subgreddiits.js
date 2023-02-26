@@ -1,14 +1,15 @@
 const subgreddiitsRouter = require('express').Router()
 
+const auth = require('../middleware/auth')
 const Subgreddiit = require('../models/subgreddiits')
 
-subgreddiitsRouter.get('/', async (request, response) => {
+subgreddiitsRouter.get('/', auth, async (request, response) => {
   await Subgreddiit.find({}).then(subgreddiits => {
     response.json(subgreddiits)
   })
 })
 
-subgreddiitsRouter.get('/visitor/:id', async (request, response, next) => {
+subgreddiitsRouter.get('/visitor/:id', auth, async (request, response, next) => {
   let currentDate = new Date()
   currentDate = currentDate.getDate() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear()
 
@@ -41,7 +42,7 @@ subgreddiitsRouter.get('/visitor/:id', async (request, response, next) => {
   }
 })
 
-subgreddiitsRouter.get('/:id', async (request, response, next) => {
+subgreddiitsRouter.get('/:id', auth, async (request, response, next) => {
   await Subgreddiit.findById(request.params.id)
     .then(subgreddiit => {
       if (subgreddiit) {
@@ -53,7 +54,7 @@ subgreddiitsRouter.get('/:id', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-subgreddiitsRouter.post('/', async (request, response, next) => {
+subgreddiitsRouter.post('/', auth, async (request, response, next) => {
   const body = request.body
 
   const subgreddiit = new Subgreddiit({
@@ -79,7 +80,7 @@ subgreddiitsRouter.post('/', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-subgreddiitsRouter.put('/:id', async (request, response, next) => {
+subgreddiitsRouter.put('/:id', auth, async (request, response, next) => {
   const { name, description, tags, bannedKeywords, followers, createdBy, posts, blockedUsers, joinRequests, image, blacklisted, creationDate, stats } = request.body
 
   let currentDate = new Date()
@@ -124,7 +125,7 @@ subgreddiitsRouter.put('/:id', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-subgreddiitsRouter.delete('/:id', (request, response, next) => {
+subgreddiitsRouter.delete('/:id', auth, (request, response, next) => {
   Subgreddiit.findByIdAndRemove(request.params.id)
     .then(() => {
       response.status(204).end()

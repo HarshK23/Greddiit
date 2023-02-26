@@ -22,6 +22,7 @@ const NewPost = ({ ifNewPost, setIfNewPost, currentUser, currentSubgreddiit, han
           autoFocus
           margin="dense"
           label="Title"
+          required
           fullWidth
           variant='outlined'
           onChange={event => handleParamChange(event, 'title')}
@@ -31,11 +32,12 @@ const NewPost = ({ ifNewPost, setIfNewPost, currentUser, currentSubgreddiit, han
           multiline
           rows={2}
           label="Text"
+          required
           fullWidth
           variant="outlined"
           onChange={event => handleParamChange(event, 'text')}
         />
-        <Button sx={{marginTop: '9px'}} variant='contained' onClick={() => handleNewPost(newPostDetails)}>Submit</Button>
+        <Button sx={{marginTop: '9px'}} variant='contained' type="submit" onClick={() => handleNewPost(newPostDetails)}>Submit</Button>
       </DialogContent>
     </Dialog>
   )

@@ -97,6 +97,12 @@ const SubgreddiitInfo = () => {
     try {
       let ifCensored = false
 
+      if (currentSubgreddiitObj.posts.includes(newPostDetails.title)) {
+        alert(`Post with title ${newPostDetails.title} already exists.`)
+        setIfNewPost(false)
+        return
+      }
+
       if (currentSubgreddiitObj.bannedKeywords[0] !== '') {
         currentSubgreddiitObj.bannedKeywords.forEach(element => {
           if (newPostDetails.title.toLowerCase().includes(element.toLowerCase())) {

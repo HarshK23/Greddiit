@@ -2,14 +2,15 @@ const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 
 const User = require('../models/users')
+const auth = require('../middleware/auth')
 
-usersRouter.get('/', async (request, response) => {
+usersRouter.get('/', auth, async (request, response) => {
   await User.find({}).then(users => {
     response.json(users)
   })
 })
 
-usersRouter.get('/:id', async (request, response, next) => {
+usersRouter.get('/:id', auth, async (request, response, next) => {
   await User.findById(request.params.id)
     .then(user => {
       if (user) {
@@ -21,7 +22,7 @@ usersRouter.get('/:id', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-usersRouter.post('/', async (request, response, next) => {
+usersRouter.post('/', auth, async (request, response, next) => {
   const body = request.body
 
   const saltRounds = 10
@@ -47,7 +48,7 @@ usersRouter.post('/', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-usersRouter.put('/:id', async (request, response, next) => {
+usersRouter.put('/:id', auth, async (request, response, next) => {
   console.log(request.body)
   const { firstName, lastName, userName, email, age, contact, password, followers, following, savedPosts } = request.body
 
@@ -65,7 +66,7 @@ usersRouter.put('/:id', async (request, response, next) => {
     .catch(error => next(error))
 })
 
-usersRouter.delete('/:id', async (request, response, next) => {
+usersRouter.delete('/:id', auth, async (request, response, next) => {
   await User.findByIdAndRemove(request.params.id)
     .then(() => {
       response.status(204).end()
